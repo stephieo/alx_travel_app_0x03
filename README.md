@@ -1,7 +1,8 @@
 # ALX TRAVEL APP
-
-This is the Django setup and configuration stage of the travel listing platform
-
+## Current Milestone: Milestone 2:
+ Model and Serializer Creation and  Data  seeding
+## Previous Milstones:
 **Milestone:** 1
+The Django setup and configuration stage of the travel listing platform
 
 **Program:** ALX ProDev
