@@ -23,7 +23,7 @@ class User(models.Model):
 class Listing(models.Model):
     listing_id = models.UUIDField(primary_key=True,
                                   default=uuid.uuid4, editable=False)
-    host_id = models.ForeignKey('User', on_delete=models.CASCADE)
+    host_id = models.ForeignKey('user_id', on_delete=models.CASCADE)
     title = models.CharField(max_length=250)
     description = models.TextField()
     location = models.CharField(max_length=250)
