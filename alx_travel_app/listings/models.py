@@ -1,7 +1,6 @@
 from django.db import models
 import uuid
 # Create your models here.
-# schema is for a  trip focused travel app, not accomodation, for now at least
 
 
 class User(models.Model):
@@ -24,14 +23,12 @@ class User(models.Model):
 class Listing(models.Model):
     listing_id = models.UUIDField(primary_key=True,
                                   default=uuid.uuid4, editable=False)
-    user_id = models.ForeignKey('User', on_delete=models.CASCADE)
+    host_id = models.ForeignKey('User', on_delete=models.CASCADE)
     title = models.CharField(max_length=250)
     description = models.TextField()
-    destination = models.CharField(max_length=250)
-    start_date = models.DateField()
-    end_date = models.DateField()
-    duration_days = models.IntegerField()
-    price = models.DecimalField(max_digits=10, decimal_places=2)
+    location = models.CharField(max_length=250)
+    max_guests = models.IntegerField()
+    price_per_night = models.DecimalField(max_digits=10, decimal_places=2)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -46,7 +43,8 @@ class Booking(models.Model):
                                      default=uuid.uuid4, editable=False)
     user_id = models.ForeignKey('User', on_delete=models.CASCADE)
     listing_id = models.ForeignKey('Listing', on_delete=models.CASCADE)
-    participants = models.IntegerField()
+    start_date = models.DateTimeField()
+    end_date = models.DateTimeField()
     total_price = models.DecimalField(max_digits=10, decimal_places=2)
     status = models.CharField(max_length=100, choices=BOOKING_STATUSES)
     booked_at = models.DateTimeField(auto_now_add=True)
