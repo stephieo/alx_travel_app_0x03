@@ -5,8 +5,7 @@ class ListingSerializer(serializers.ModelSerializer):
     class Meta:
         ''' this  identifies which model the serializer is tied to and the fields  to (de)serialize'''
         model = Listing
-        fields = ['listing_id','user_id', 'title', 'description',
-                  'start_date', 'end_date', 'duration_days', 'price']
+        fields = '__all__'
         read_only_fields = ['listing_id', 'user_id','created_at']
     
     def validate_title(self, value):
@@ -33,8 +32,7 @@ class ListingSerializer(serializers.ModelSerializer):
 class BookingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Booking
-        fields = [ 'booking_id', 'user_id', 'listing_id',
-                  'participants', 'total_price', 'status', 'booked_at']
+        fields = '__all__'
         read_only_fields = [ 'user_id', 'listing_id', 'booked_at']
 
     def validate_totalprice(self, value):
