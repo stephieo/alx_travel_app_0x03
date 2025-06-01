@@ -1,4 +1,4 @@
-# ALX TRAVEL APP
-## Current Milestone: Milestone 2:
+## Milestone 2: ALX_TRAVEL_APP
+### Django milestone application
  Model and Serializer Creation and  Data  seeding
 
