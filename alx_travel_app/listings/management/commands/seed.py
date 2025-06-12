@@ -28,7 +28,7 @@ class Command(BaseCommand):
             self.stdout.write(self.style.ERROR(f"Error: {str(e)}"))
     
     def seed_users(self, users):
-        accepted_roles = [role[0] in role for User.USER_TYPES]
+        accepted_roles = [role[0] for role in User.USER_TYPES]
         for user_data in users:
             try:
                 user_id = uuid.UUID(user_data.get('user_id'))
