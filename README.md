@@ -50,5 +50,5 @@ This milestone focuses on creating API endpoints for the ALX Travel App. The goa
 ### Usage
 
 - Access the application in your web browser at `http://localhost:8000`.
-- Use the Django admin interface to manage models and data at `http://localhost:8000/admin`.
+- View the interactive API documentation using Swagger UI at [http://localhost:8000/swagger/](http://localhost:8000/swagger/).
 - Test the API endpoints using Postman or any other API testing tool.
