@@ -1,5 +1,6 @@
 from django.db import models
 import uuid
+from datetime import datetime
 # Create your models here.
 
 
@@ -23,7 +24,7 @@ class User(models.Model):
 class Listing(models.Model):
     listing_id = models.UUIDField(primary_key=True,
                                   default=uuid.uuid4, editable=False)
-    host = models.ForeignKey('user_id', on_delete=models.CASCADE)
+    host = models.ForeignKey('User', on_delete=models.CASCADE)
     title = models.CharField(max_length=250)
     description = models.TextField()
     location = models.CharField(max_length=250)
@@ -54,7 +55,7 @@ class Booking(models.Model):
 class Review(models.Model):
     class Ratings(models.IntegerChoices):
         """NAME = database_value, "display_value
-                NAME: Python identifier (constant name) you use in your code""""
+                NAME: Python identifier (constant name) you use in your code"""
         ONE = 1, '1'
         TWO = 2, '2'
         THREE = 3, '3'
@@ -63,8 +64,34 @@ class Review(models.Model):
     
     review_id = models.IntegerField(primary_key=True,
                                     default=uuid.uuid4, editable=False)
-    user_id = models.ForeignKey('User', on_delete=models.CASCADE)
-    listing_id = models.ForeignKey('Listing', on_delete=models.CASCADE)
+    user = models.ForeignKey('User', on_delete=models.CASCADE)
+    listing = models.ForeignKey('Listing', on_delete=models.CASCADE)
     rating = models.IntegerField(choices=Ratings.choices)
     comment = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+
+class Payment(models.Model):
+    class PaymentMethod(models.TextChoices):
+        CREDIT_CARD = 'credit_card', 'Credit Card'
+        PAYPAL = 'paypal', 'PayPal'
+        BANK_TRANSFER = 'bank_transfer', 'Bank Transfer'
+    
+    class PaymentStatus(models.TextChoices):
+        PENDING = 'pending', 'Pending'
+        COMPLETED = 'completed', 'Completed'
+        FAILED = 'failed', 'Failed'
+
+    payment_id = models.IntegerField(primary_key=True,
+                                     default=uuid.uuid4, editable=False)
+    booking = models.ForeignKey('Booking', on_delete=models.CASCADE)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    payment_date = models.DateTimeField(auto_now_add=True)
+    trx_ref = models.CharField(max_length=100, unique=True, blank=True, null=True)
+    chapa_trx_ref = models.CharField(max_length=100, unique=True, blank=True, null=True)
+    payment_status = models.CharField(max_length=100, choices=PaymentStatus.choices)
+
+    def generate_trx_ref(self):
+        """Generates a unique transaction reference for the payment."""
+        now = datetime.now().strftime("%Y%m%d%H%M%S")
+        return f"PAY-{self.payment_id}-{now}-{uuid.uuid4().hex[:8].upper()}"
+

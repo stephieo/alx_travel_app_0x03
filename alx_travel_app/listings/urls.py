@@ -8,10 +8,13 @@ router.register('listings', views.ListingViewSet)
 router.register('bookings', views.BookingViewSet)
 
 nested_messages_router = NestedDefaultRouter(router, r'listings', lookup='listings')
-nested_messages_router.register(r'bookings', views.MessageViewSet)
+nested_messages_router.register(r'bookings', views.BookingViewSet)
 
 
 urlpatterns = [
     path('', include(router.urls)),
     path('', include(nested_messages_router.urls)),
+    path('payments/initiate/', views.InitiatePaymentView.as_view(), name='initiate-payment'),
+    path('payments/callback/', views.PaymentCallbackView.as_view(), name='payment-callback'),
+    path('payments/verify/', views.VerifyPaymentView.as_view(), name='verify-payment')
     ]
