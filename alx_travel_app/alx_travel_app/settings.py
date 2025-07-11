@@ -135,3 +135,11 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CHAPA_SECRET_KEY = env('CHAPA_SECRET_KEY')
+
+#Celery configurations
+CELERY_BROKER_URL = 'pyamqp://guest:guest@localhost//'
+
+#Results  backend (optional, but recommended for montoring)
+CELERY_RESULT_BACKEND = 'rpc://'
+
+CELERY_WORKER_POOL = 'solo' # use prefork for production environment

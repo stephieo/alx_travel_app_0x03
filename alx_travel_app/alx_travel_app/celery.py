@@ -12,10 +12,13 @@ app = Celery('alx_travel_app')
 #   should have a `CELERY_` prefix.
 app.config_from_object('django.conf:settings', namespace='CELERY')
 
-# Load task modules from all registered Django apps.
+# connection to rabbitmq tends to fail on initial startup. this solves that
+app.conf.broker_connection_retry_on_startup = True
+
+#Celery will read the tasks in'tasks.py' from all registered Django apps.
 app.autodiscover_tasks()
 
-
+# this is supposed to be for debugging?
 @app.task(bind=True, ignore_result=True)
 def debug_task(self):
     print(f'Request: {self.request!r}')
