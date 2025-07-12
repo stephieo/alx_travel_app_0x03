@@ -143,3 +143,16 @@ CELERY_BROKER_URL = 'pyamqp://guest:guest@localhost//'
 CELERY_RESULT_BACKEND = 'rpc://'
 
 CELERY_WORKER_POOL = 'solo' # use prefork for production environment
+
+
+
+# Email settings for sending emails
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # For testing, prints to console
+# For production, use SMTP (e.g., Gmail):
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+# EMAIL_HOST_USER = 'your-email@gmail.com'
+# EMAIL_HOST_PASSWORD = 'your-app-password'  # Use an App Password for Gmail
+DEFAULT_FROM_EMAIL = 'alx_travel_app@domain.com'  # Replace with your app’s default email

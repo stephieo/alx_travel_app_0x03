@@ -9,6 +9,7 @@ from rest_framework.response import Response
 from django.conf import settings
 import requests
 from django.db import transaction
+from .tasks import send_booking_confirmation_mail
 
 
 class ListingViewSet(viewsets.ModelViewSet):
@@ -29,6 +30,24 @@ class BookingViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['start_date', 'listing__title', 'status']
 
+    def create(self, request, * args, **kwargs):
+        """ creation overide to  trigger booking confirmation email Celery task"""
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        booking = Booking.objects.get(id=serializer.data['id'])
+        # Trigger Celery task to send confirmation email
+        send_booking_confirmation_mail.delay(
+            booking_id=booking.id,
+            user_email=booking.user.email,
+            user_name=booking.user.first_name,
+            booking_date=str(booking.start_date),
+            service_name=booking.listing.title
+        )
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=201, headers=headers)
+
+
 # key for payment transactions
 chapa_secret_key = settings.CHAPA_SECRET_KEY
 
@@ -38,7 +57,7 @@ chapa_secret_key = settings.CHAPA_SECRET_KEY
 # [ ]  the return url should be made dynamic later. what is there is just for development
 # [ ]  the callback url should be made dynamic later as well
 # [x]  the payment initiation should be made atomic, so that on any fail, the whole transaction is rolled back. VERY important for payments
-# [ ] i need to implement  sending email confirmation  to user with Celery
+# [ ] i need to implement  sending email on paymnent confirmation  to user with Celery
 # [ ]  sandbocx  testing with ChapaAPI and  save screenshots of the responses
 class InitiatePaymentView(views.APIView):
     authentication_classes = [SessionAuthentication, BasicAuthentication]
