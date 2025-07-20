@@ -8,7 +8,7 @@ class User(models.Model):
     USER_TYPES = [
         ('guest', 'Guest'),
         ('host', 'Host'),
-        ('Admin', 'admin')
+        ('admin', 'Admin')
     ]
     user_id = models.UUIDField(primary_key=True,
                                default=uuid.uuid4, editable=False)

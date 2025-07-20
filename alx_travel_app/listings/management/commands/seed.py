@@ -2,7 +2,9 @@ from django.core.management.base import BaseCommand
 from django.conf import settings
 import os
 import json
-from .models import User, Listing, Booking
+import uuid
+from json import JSONDecodeError
+from ...models import User, Listing, Booking
 
 
 class Command(BaseCommand):
@@ -18,7 +20,7 @@ class Command(BaseCommand):
 
         try:
             with open(file_path, 'r') as f:
-                data = json.loads(file)
+                data = json.load(f)
                 self.seed_users(data.get('users',[]))
         except FileNotFoundError:
             self.stdout.write(self.style.ERROR(f"File {file_path} not found"))
@@ -43,7 +45,8 @@ class Command(BaseCommand):
                     self.stdout.write(f"ERROR: This is not a valid user role")
                     self.stdout.write(f"skipping...")
                     continue
-
+                
+                self.stdout.write(self.style.INFO(f"Creating user {email}"))
                 User.objects.create(
                     user_id=user_id,
                     first_name=user_data.get('first_name'),
@@ -54,6 +57,7 @@ class Command(BaseCommand):
                     role=role,
                     created_at=user_data.get('created_at')
                 )
+                self.stdout.write(self.style.SUCCESS("User successfully created"))
             except ValueError:
                 self.stdout.write(f"ERROR: This is not a valid user id")
                 self.stdout.write(f"skipping...")
