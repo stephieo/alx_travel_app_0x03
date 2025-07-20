@@ -1,34 +1,39 @@
-## Milestone 4: ALX_TRAVEL_APP
+## Milestone 5: ALX_TRAVEL_APP
 
 ### Django milestone application
 
-**Payment integration with Chapa**
+**Background Task Management and Email Notification Implementation with Celery and RabbitMQ**
 
 ---
 
 ### Description
 
-This milestone focuses on integrating payment functionality into the ALX Travel App using Chapa as the payment gateway. Users can make secure payments for bookings, and the system handles payment initiation, verification, and callback processing.
+This milestone focuses on implementing background task management and email notification functionality into the ALX Travel App using Celery as the task queue and RabbitMQ as the message broker. The system handles asynchronous tasks such as email notifications for booking confirmations, payment receipts, and user communications without blocking the main application flow.
 
 ### Features
 
-- **Payment Integration**: Initiate and verify payments using the Chapa API.
-- **Atomic Transactions**: Payment initiation is atomic to ensure data consistency.
-- **Dynamic Payment References**: Unique transaction references are generated for each payment.
-- **Booking & Payment Models**: Models for users, listings, bookings, and payments with proper relationships.
-- **API Endpoints**: RESTful endpoints for listings, bookings, and payment operations.
-- **Authentication**: Endpoints secured with session and basic authentication.
-- **Callback Handling**: Handles Chapa payment callbacks to update payment status.
-- **Extensible for Email Notifications**: (Planned) Email confirmation to users after payment via Celery.
+- **Background Task Processing**: Asynchronous task execution using Celery workers.
+- **Email Notifications**: Automated email sending for booking confirmations and payment receipts.
+- **Message Queue Integration**: RabbitMQ as the message broker for reliable task queuing.
+- **Task Monitoring**: Built-in task status tracking and monitoring capabilities.
+- **Scalable Architecture**: Distributed task processing for improved performance.
+- **Booking & Payment Models**: Enhanced models with email notification triggers.
+- **API Endpoints**: RESTful endpoints integrated with background task triggers.
+- **Authentication**: Secured endpoints with session and basic authentication.
+- **Email Templates**: HTML email templates for professional user communications.
+- **Task Retry Logic**: Automatic retry mechanisms for failed email delivery.
 
 ### Technologies Used
 
 - **Django**: High-level Python web framework.
 - **Django REST Framework**: Toolkit for building Web APIs.
-- **Chapa API**: Payment gateway for processing transactions.
+- **Celery**: Distributed task queue for background processing.
+- **RabbitMQ**: Message broker for task queuing and distribution.
+- **Redis**: Optional result backend for task result storage.
+- **SMTP**: Email delivery service integration.
 - **SQLite**: Default database for development.
 - **Postman**: For API testing.
-- **requests**: For making external HTTP requests to Chapa.
+- **Flower**: Web-based tool for monitoring Celery tasks (optional).
 
 ### Setup Instructions
 
@@ -38,18 +43,32 @@ This milestone focuses on integrating payment functionality into the ALX Travel 
    ```
 2. **Install Dependencies**:
    ```bash
-   cd alx_travel_app_0x02
+   cd alx_travel_app_0x03
    pip install -r requirements.txt
    ```
-3. **Run Migrations**:
+3. **Install and Start RabbitMQ**:
+   ```bash
+   # Ubuntu/Debian
+   sudo apt-get install rabbitmq-server
+   sudo systemctl start rabbitmq-server
+   
+   # macOS
+   brew install rabbitmq
+   brew services start rabbitmq
+   ```
+4. **Run Migrations**:
    ```bash
    python manage.py migrate
    ```
-4. **Seed the Database** (optional):
+5. **Start Celery Worker** (in a separate terminal):
    ```bash
-   python manage.py loaddata initial_data.json
+   celery -A alx_travel_app worker --loglevel=info
    ```
-5. **Run the Development Server**:
+6. **Start Celery Beat** (for periodic tasks, in another terminal):
+   ```bash
+   celery -A alx_travel_app beat --loglevel=info
+   ```
+7. **Run the Development Server**:
    ```bash
    python manage.py runserver
    ```
@@ -58,8 +77,10 @@ This milestone focuses on integrating payment functionality into the ALX Travel 
 
 - Access the app at `http://localhost:8000`.
 - API documentation (if enabled) at `http://localhost:8000/swagger/`.
-- Test payment endpoints using Postman or similar tools.
-- To initiate a payment, make a POST request to `/api/payments/initiate/` with a valid booking ID.
-- After payment, Chapa will call your callback endpoint to update payment status.
+- Test email notification endpoints using Postman or similar tools.
+- Monitor Celery tasks using Flower at `http://localhost:5555` (if installed).
+- Background tasks are automatically triggered on booking creation and payment completion.
+- Email notifications are sent asynchronously without blocking the API response.
+- Check RabbitMQ management interface at `http://localhost:15672` (guest/guest) for queue monitoring.
 
 ---
