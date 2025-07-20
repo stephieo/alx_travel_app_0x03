@@ -1,2 +1,3 @@
 venv/
 alx_travel_app/.env
+/alx_travel_app/static/

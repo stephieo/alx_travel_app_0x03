@@ -23,9 +23,9 @@ from django.views.generic.base import RedirectView
 
 schema_view = get_schema_view(
     openapi.Info(
-        title="Snippets API",
+        title="ALX Travel App (API)",
         default_version='v1',
-        description="Test description",
+        description="Documentation For Vacation Rental Platform",
         terms_of_service="https://www.google.com/policies/terms/",
         contact=openapi.Contact(email="contact@snippets.local"),
         license=openapi.License(name="BSD License"),
