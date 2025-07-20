@@ -213,7 +213,7 @@ class VerifyPaymentView(views.APIView):
                 # if failed, set status to failed
                 payment.status = 'Failed'
                 payment.save()
-                return Response({"error": "Invalid Transaction or transaction not found""},
+                return Response({"error": "Invalid Transaction or transaction not found"},
                                 status=response.status_code)
                 
                 # there should be some deletion in the db her i think

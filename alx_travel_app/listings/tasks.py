@@ -25,7 +25,7 @@ def send_booking_confirmation_mail(booking_id, user_email,
 
     Best regards,
     Your App Team
-    """"
+    """
 
     send_mail(
            subject=subject,
